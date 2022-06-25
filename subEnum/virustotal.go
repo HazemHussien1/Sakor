@@ -1,4 +1,4 @@
-package subsEnum
+package subEnum
 
 // GetVirusTotalSubs Fetches subdomains from Virus Total, Requires api key
 func GetVirusTotalSubs(domain string) ([]string, error) {

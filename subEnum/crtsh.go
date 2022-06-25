@@ -1,4 +1,4 @@
-package subsEnum
+package subEnum
 
 import (
 	"encoding/json"

@@ -5,6 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"os"
+
+	"github.com/HazemHussien1/Sakor/crawl"
+	"github.com/HazemHussien1/Sakor/subEnum"
+	"github.com/HazemHussien1/Sakor/utils"
 )
 
 
@@ -31,11 +35,11 @@ func main() {
   scanner := bufio.NewScanner(os.Stdin)
   if c {
 	for scanner.Scan() {
-	  Crawl(scanner.Text(), d, threads)
+	  crawl.Crawl(scanner.Text(), d, threads)
 	}
 
 	if scanner.Err() != nil {
-	  usage()
+	  utils.Usage()
 	  os.Exit(3)
 	}
 
@@ -53,7 +57,7 @@ func main() {
 
 	  virusTotalDomains, err := subEnum.GetVirusTotalSubs(scanner.Text())
 	  if err != nil {
-	  	fmt.Printf("crtsh failed")
+		fmt.Printf("crtsh failed")
 	  }
 
 	  // need to do this in a better way
