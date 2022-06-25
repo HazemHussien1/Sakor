@@ -7,7 +7,7 @@ import (
 )
 
 //use colly to crawl the url and print each one
-func crawl(url string, depth int, threads int) {
+func Crawl(url string, depth int, threads int) {
 	fmt.Printf("%s\n", url)
 
 	c := colly.NewCollector(

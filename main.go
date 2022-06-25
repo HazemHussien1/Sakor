@@ -7,96 +7,65 @@ import (
 	"os"
 )
 
-//<TODO>  write virustotal.go
-//<TODO>
-
-func filterAndPrint(slice []string) {
-	//filter outputWordlist and print it
-	for i := 0; i < len(slice); i++ {
-		if contains(slice[i+1:], slice[i]) {
-			slice = remove(slice, i)
-			i--
-		}
-	}
-	for i := 0; i < len(slice); i++ {
-		fmt.Printf("%s\n", slice[i])
-	}
-
-}
-func remove(slice []string, s int) []string {
-	return append(slice[:s], slice[s+1:]...)
-}
-
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
-
-func usage() {
-	fmt.Printf("Usage for finding subdomains:")
-	fmt.Printf("cat domains.txt | domainRecon")
-	fmt.Printf("Usage for crawling urls")
-	fmt.Printf("cat urls.txt | domainRecon")
-}
 
 func main() {
 
-	var threads int
-	flag.IntVar(&threads, "threads", 10, "number of threads")
+  var threads int
+  flag.IntVar(&threads, "t", 10, "number of threads")
+  flag.IntVar(&threads, "threads", 10, "number of threads")
 
-	var verbose bool
-	flag.BoolVar(&verbose, "v", false, "verbose option")
+  var verbose bool
+  flag.BoolVar(&verbose, "v", false, "verbose option")
+  flag.BoolVar(&verbose, "verbose", false, "verbose option")
 
-	var c bool
-	flag.BoolVar(&c, "c", false, "crawl urls")
+  var c bool
+  flag.BoolVar(&c, "c", false, "crawl urls")
+  flag.BoolVar(&c, "crawl", false, "crawl urls")
 
-	var d int
-	flag.IntVar(&d, "d", 2, "depth to crawl")
+  var d int
+  flag.IntVar(&d, "d", 2, "depth to crawl")
+  flag.IntVar(&d, "depth", 2, "depth to crawl")
 
-	flag.Parse()
+  flag.Parse()
 
-	scanner := bufio.NewScanner(os.Stdin)
-	if c {
-		for scanner.Scan() {
-			crawl(scanner.Text(), d, threads)
-		}
-
-		if scanner.Err() != nil {
-			usage()
-			os.Exit(3)
-		}
-
-	} else {
-		for scanner.Scan() {
-			crtshDomains, err := GetCrtshSubs(scanner.Text())
-			if err != nil {
-				fmt.Printf("crtsh failed")
-			}
-
-			certSpotterDomains, err := GetCertSpotterSubs(scanner.Text())
-			if err != nil {
-				fmt.Printf("crtsh failed")
-			}
-
-			// virusTotalDomains, err := GetVirusTotalSubs(scanner.Text())
-			// if err != nil {
-			// 	fmt.Printf("crtsh failed")
-			// }
-
-			// need to do this in a better way
-			allDomains := append(crtshDomains, certSpotterDomains...)
-			// allDomains = append(allDomains, virusTotalDomains...)
-
-			filterAndPrint(allDomains)
-		}
-
-		if scanner.Err() != nil {
-			usage()
-			os.Exit(3)
-		}
+  scanner := bufio.NewScanner(os.Stdin)
+  if c {
+	for scanner.Scan() {
+	  Crawl(scanner.Text(), d, threads)
 	}
+
+	if scanner.Err() != nil {
+	  usage()
+	  os.Exit(3)
+	}
+
+  } else {
+	for scanner.Scan() {
+	  crtshDomains, err := subEnum.GetCrtshSubs(scanner.Text())
+	  if err != nil {
+		fmt.Printf("crtsh failed")
+	  }
+
+	  certSpotterDomains, err := subEnum.GetCertSpotterSubs(scanner.Text())
+	  if err != nil {
+		fmt.Printf("crtsh failed")
+	  }
+
+	  virusTotalDomains, err := subEnum.GetVirusTotalSubs(scanner.Text())
+	  if err != nil {
+	  	fmt.Printf("crtsh failed")
+	  }
+
+	  // need to do this in a better way
+	  allDomains := append(crtshDomains, certSpotterDomains...)
+	  allDomains = append(allDomains, virusTotalDomains...)
+
+	  utils.FilterAndPrint(allDomains)
+	}
+
+	if scanner.Err() != nil {
+	  utils.Usage()
+	  os.Exit(3)
+	}
+  }
 }
